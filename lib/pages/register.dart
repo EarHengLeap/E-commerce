@@ -1,13 +1,16 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../components/my_button.dart';
 import '../components/my_textfield.dart';
+import '../services/auth_service.dart';
+import 'square_title.dart';
 
 class Register extends StatefulWidget {
   final Function()? onTap;
   Register({Key? key, this.onTap}) : super(key: key);
-  
 
   @override
   State<Register> createState() => _LoginPageState();
@@ -17,25 +20,57 @@ class _LoginPageState extends State<Register> {
   // text editing controllers
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
   // login user method
-  void signUserIn() async {
-    // show loading circle
-    showDialog(
-      context: context,
-      builder: (context) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-    );
-    // create
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+void signUserIn() async {
+  // Show loading circle
+  showDialog(
+    context: context,
+    builder: (context) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    },
+  );
+
+  // Check if passwords match
+  if (passwordController.text == confirmPasswordController.text) {
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: emailController.text,
         password: passwordController.text,
       );
-      Navigator.pop(context);
+      Navigator.pop(context); 
+    } on FirebaseAuthException catch (e) {
+      Navigator.pop(context); 
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: Text(e.message ?? 'An error occurred.'),
+          );
+        },
+      );
+    }
+  } else {
+    Navigator.pop(context);
+    showDialog(
+      context: context,
+      builder: (context) {
+        final dialog = AlertDialog(
+          content: const Text('Password do not match.'),
+        );
+        Timer(const Duration(seconds: 1), () {
+          Navigator.pop(context);
+        });
+
+        return dialog;
+      },
+    );
   }
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,10 +86,10 @@ class _LoginPageState extends State<Register> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const SizedBox(height: 50),
-               SvgPicture.asset(
-              'assets/images/register.svg',
-              height: 150,
-            ),
+              SvgPicture.asset(
+                'assets/images/register.svg',
+                height: 150,
+              ),
               const SizedBox(height: 50),
               Text(
                 'Let\'s Create an Account',
@@ -84,36 +119,22 @@ class _LoginPageState extends State<Register> {
 
               const SizedBox(height: 10),
 
-               //confirm password textfield
+              //confirm password textfield
               MyTextField(
-                controller: passwordController,
+                controller: confirmPasswordController,
                 hintText: 'Confirm Password',
                 obscureText: true,
-              ),
-
-              const SizedBox(height: 10),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      'Forgot Password?',
-                      style: TextStyle(color: Colors.grey[600]),
-                    ),
-                  ],
-                ),
               ),
 
               const SizedBox(height: 25),
 
               // login button
               MyLoginButton(
+                text: "Sign Up",
                 onTap: signUserIn,
               ),
 
-              const SizedBox(height: 50),
+              const SizedBox(height: 25),
 
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -147,17 +168,19 @@ class _LoginPageState extends State<Register> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    'assets/images/google_icon.png',
-                    height: 72,
+                  SquareTitle(
+                    onTap: () => AuthService().signInWithGoogle(),
+                    imagePath: 'assets/images/google_icon.png',
                   ),
                   const SizedBox(width: 10),
-                  Image.asset(
-                    'assets/images/x.png',
-                    height: 40,
+                  SquareTitle(
+                    onTap: () {},
+                    imagePath: 'assets/images/x.png',
                   ),
                 ],
               ),
+
+              const SizedBox(height: 25),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -167,11 +190,11 @@ class _LoginPageState extends State<Register> {
                   ),
                   const SizedBox(width: 5),
                   GestureDetector(
-                    onTap:  widget.onTap,
+                    onTap: widget.onTap,
                     child: Text(
-                      'Login now',
+                      'Signin now',
                       style: TextStyle(
-                        color: Colors.black,
+                        color: Color(0xFF00073FF),
                         fontWeight: FontWeight.bold,
                       ),
                     ),

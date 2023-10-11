@@ -1,3 +1,8 @@
+import 'dart:async';
+
+import 'package:final_project/pages/forgot_password.dart';
+import 'package:final_project/pages/square_title.dart';
+import 'package:final_project/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -19,7 +24,7 @@ class _LoginPageState extends State<LoginPage> {
 
   // login user method
   void signUserIn() async {
-    // show loading circle
+    // Show loading circle
     showDialog(
       context: context,
       builder: (context) {
@@ -28,13 +33,33 @@ class _LoginPageState extends State<LoginPage> {
         );
       },
     );
-    // sign in
+
+    try {
+      // Sign in
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text,
         password: passwordController.text,
       );
       Navigator.pop(context);
+    } on FirebaseAuthException catch (e) {
+      Navigator.pop(context);
+      showDialog(
+        context: context,
+        builder: (context) {
+          final dialog = AlertDialog(
+            title: const Text('Login Failed'),
+            content: const Text('Incorrect email or password.'),
+          );
+          Timer(const Duration(seconds: 1), () {
+            Navigator.pop(context);
+          });
+
+          return dialog;
+        },
+      );
+    }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,9 +76,9 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               const SizedBox(height: 50),
               SvgPicture.asset(
-              'assets/images/ecommerce.svg',
-              height: 150,
-            ),
+                'assets/images/ecommerce.svg',
+                height: 150,
+              ),
               const SizedBox(height: 40),
               Text(
                 'E-commerce App',
@@ -89,9 +114,18 @@ class _LoginPageState extends State<LoginPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text(
-                      'Forgot Password?',
-                      style: TextStyle(color: Colors.grey[600]),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const ForgotPasswordPage()));
+                      },
+                      child: Text(
+                        'Forgot Password?',
+                        style: TextStyle(color: Color(0xFF00073FF)),
+                      ),
                     ),
                   ],
                 ),
@@ -101,10 +135,11 @@ class _LoginPageState extends State<LoginPage> {
 
               // login button
               MyLoginButton(
+                text: "Sign In",
                 onTap: signUserIn,
               ),
 
-              const SizedBox(height: 50),
+              const SizedBox(height: 25),
 
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -138,17 +173,19 @@ class _LoginPageState extends State<LoginPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    'assets/images/google_icon.png',
-                    height: 72,
+                  SquareTitle(
+                    onTap: () => AuthService().signInWithGoogle(),
+                    imagePath: 'assets/images/google_icon.png',
                   ),
                   const SizedBox(width: 10),
-                  Image.asset(
-                    'assets/images/x.png',
-                    height: 40,
+                  SquareTitle(
+                    onTap: () {},
+                    imagePath: 'assets/images/x.png',
                   ),
                 ],
               ),
+
+              const SizedBox(height: 25),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -158,11 +195,11 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   const SizedBox(width: 5),
                   GestureDetector(
-                    onTap:  widget.onTap,
+                    onTap: widget.onTap,
                     child: Text(
                       'Signup now',
                       style: TextStyle(
-                        color: Colors.black,
+                        color: Color(0xFF00073FF),
                         fontWeight: FontWeight.bold,
                       ),
                     ),
