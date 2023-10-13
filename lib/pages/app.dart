@@ -10,9 +10,6 @@ class App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: "Poppins",
-        textTheme: TextTheme(
-          bodyText1: TextStyle(fontFamily: 'Bokor')
-        )
       ),
       home: AuthPage(),
     );

@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:final_project/pages/forgot_password.dart';
 import 'package:final_project/pages/square_title.dart';
 import 'package:final_project/services/auth_service.dart';
