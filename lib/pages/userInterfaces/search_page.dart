@@ -1,4 +1,7 @@
+
+import 'package:final_project/pages/shared/appstyle.dart';
 import 'package:flutter/material.dart';
+
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -11,14 +14,9 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _buildBody(),
+      body: Center(
+        child: Text("This is Search", style: appstyle(40, Colors.black, FontWeight.bold),),
+      ),
     );
   }
-
-  Widget _buildBody() {
-    return Center(
-      child: Text('SearchPage'),
-    );
-  }
-
 }

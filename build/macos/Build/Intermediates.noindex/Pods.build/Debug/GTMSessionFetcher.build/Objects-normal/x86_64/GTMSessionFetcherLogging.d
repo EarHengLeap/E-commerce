@@ -1,0 +1,5 @@
+dependencies: \
+  /Users/senghong/Downloads/E-commerce-main\ 2/build/macos/Build/Intermediates.noindex/Pods.build/Debug/GTMSessionFetcher.build/module.modulemap \
+  /Users/senghong/Downloads/E-commerce-main\ 2/macos/Pods/GTMSessionFetcher/Sources/Core/GTMSessionFetcherLogging.m \
+  /Users/senghong/Downloads/E-commerce-main\ 2/macos/Pods/GTMSessionFetcher/Sources/Core/Public/GTMSessionFetcher/GTMSessionFetcherLogging.h \
+  /Users/senghong/Downloads/E-commerce-main\ 2/macos/Pods/GTMSessionFetcher/Sources/Core/Public/GTMSessionFetcher/GTMSessionFetcher.h

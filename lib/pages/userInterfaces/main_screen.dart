@@ -1,40 +1,34 @@
 import 'package:final_project/controllers/mainscreen_provider.dart';
+import 'package:final_project/pages/shared/bottom_nav_bar.dart';
 import 'package:final_project/pages/userInterfaces/cart_page.dart';
+import 'package:final_project/pages/userInterfaces/home_page.dart';
 import 'package:final_project/pages/userInterfaces/profile.dart';
 import 'package:final_project/pages/userInterfaces/search_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../bottom_nav_bar.dart';
-import 'home_page.dart';
-
-
+// ignore: must_be_immutable
 class MainScreen extends StatelessWidget {
-  final List<Widget> pageList = const [
-    HomePage(),
-    SearchPage(),
-    HomePage(),
-    CartPage(),
-    ProfilePage(),
-  ];
   MainScreen({super.key});
+
+  List<Widget> pageList =  [
+    const HomePage(),
+    const SearchPage(),
+    const HomePage(),
+    CartPage(),
+    const ProfilePage()
+  ];
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: _buildBody(),
-      bottomNavigationBar: BottomNavBar(),
-    );
-  }
-
- 
-
-  Widget _buildBody() {
-    return Consumer<MainScreenNotifier> (
+    return Consumer<MainScreenNotifier>(
       builder: (context, mainScreenNotifier, child) {
-        return pageList[mainScreenNotifier.pageIndex];
+        return Scaffold(
+          backgroundColor: const Color(0xFFE2E2E2),
+                  
+          body: pageList[mainScreenNotifier.pageIndex],
+          bottomNavigationBar: const BottoNavBar(),
+        );
       },
     );
   }
 }
-
